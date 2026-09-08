@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto Solaris | Soluciones en Energía Renovables - Lobos</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Barlow Condensed / Bahnschrift style -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            solaris: {
+              green: '#48D448',
+              greenHover: '#3ec03e',
+              greenLight: '#f4fbf4',
+              greenSubtle: '#eafbe9',
+              greenBright: '#5ce05c',
+              blue: '#0F3E6D',
+              blueHover: '#0a2d52',
+              blueLight: '#f0f7ff',
+              blueAccent: '#1d64b0',
+              grayBg: '#f8fafc',
+              grayCard: '#f1f5f9',
+              slateBorder: '#e2e8f0'
+            }
+          },
+          fontFamily: {
+            sans: ['"Bahnschrift Light Condensed"', 'Bahnschrift', '"Barlow Condensed"', '"DIN Alternate"', 'sans-serif']
+          },
+          letterSpacing: {
+            tightest: '-0.035em',
+            tighter: '-0.02em',
+            condensed: '0.01em',
+            widecond: '0.04em'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Bahnschrift Light Condensed', 'Bahnschrift', 'Barlow Condensed', 'DIN Alternate', sans-serif;
+      letter-spacing: 0.015em;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      letter-spacing: 0.02em;
+    }
+
+    .hover-lift {
+      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease;
+    }
+    .hover-lift:hover {
+      transform: translateY(-3px) scale(1.015);
+    }
+    .hover-lift-sm {
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+    }
+    .hover-lift-sm:hover {
+      transform: scale(1.03);
+    }
+
+    @keyframes flowDashes {
+      from { stroke-dashoffset: 40; }
+      to { stroke-dashoffset: 0; }
+    }
+    .animate-energy-flow {
+      stroke-dasharray: 6, 6;
+      animation: flowDashes 1.2s linear infinite;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #48D448;
+      border-radius: 4px;
+    }
+
+    @keyframes brandScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee-brands {
+      display: flex;
+      width: max-content;
+      animation: brandScroll 11s linear infinite;
+    }
+    .animate-marquee-brands:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes subtleHop {
+      0%, 82%, 100% {
+        transform: translateY(0);
+      }
+      87% {
+        transform: translateY(-5px);
+      }
+      92% {
+        transform: translateY(0);
+      }
+      96% {
+        transform: translateY(-2.5px);
+      }
+    }
+    .animate-hop-3s {
+      animation: subtleHop 3s ease-in-out infinite;
+    }
+
+    /* === SISTEMA DE ANIMACIONES POR SCROLL (PREMIUM, SUAVE Y ELEGANTE) === */
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal-item.is-revealed {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+
+    /* Revelación línea por línea para títulos principales */
+    .split-line-mask {
+      display: block;
+      overflow: hidden;
+      padding-bottom: 0.08em;
+    }
+
+    .split-line-child {
+      display: inline-block;
+      transform: translateY(115%);
+      opacity: 0;
+      transition: transform 1.05s cubic-bezier(0.22, 1, 0.36, 1),
+                  opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform, opacity;
+    }
+
+    .is-revealed .split-line-child,
+    .split-line-mask.is-revealed .split-line-child {
+      transform: translateY(0) !important;
+      opacity: 1 !important;
+    }
+
+    /* Escalonamiento controlado (Delays) */
+    .delay-100 { transition-delay: 100ms; }
+    .delay-150 { transition-delay: 150ms; }
+    .delay-200 { transition-delay: 200ms; }
+    .delay-250 { transition-delay: 250ms; }
+    .delay-300 { transition-delay: 300ms; }
+    .delay-400 { transition-delay: 400ms; }
+    .delay-500 { transition-delay: 500ms; }
+
+    /* Parallax sutil de fondo */
+    .parallax-layer {
+      will-change: transform;
+      transition: transform 0.15s cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-item,
+      .split-line-child {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .parallax-layer {
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-800 min-h-screen flex flex-col antialiased">
+
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-white/95 border-b border-slate-200 shadow-xs transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+      
+      <!-- Contenedor con fondo gris integrado desde el logo hasta Preguntas -->
+      <div class="flex items-center gap-6 px-4 py-2 rounded-2xl bg-slate-200/90 border border-slate-300 shadow-xs">
+        <a href="#inicio" class="flex items-center gap-3.5 group hover-lift-sm" title="Proyecto Solaris - Inicio">
+          <div class="relative w-12 h-12 flex-shrink-0 flex items-center justify-center p-0.5 rounded-full bg-white border border-slate-300 shadow-xs group-hover:border-[#48D448] transition-colors overflow-hidden">
+            <img src="277956950_733975734267123_4331651210595680425_n.jpg" alt="Proyecto Solaris Logo" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/48D448/ffffff?text=PS'">
+          </div>
+          <div>
+            <div class="text-2xl font-bold tracking-tight text-solaris-blue flex items-center gap-1.5 leading-none uppercase">
+              PROYECTO <span class="text-[#48D448]">SOLARIS</span>
+            </div>
+            <span class="text-xs font-semibold text-slate-600 tracking-wider uppercase block mt-1">
+              Soluciones en energía renovables
+            </span>
+          </div>
+        </a>
+
+        <div class="hidden lg:block w-px h-8 bg-slate-300"></div>
+
+        <nav class="hidden lg:flex items-center gap-5 text-sm font-bold text-slate-700 uppercase tracking-wide">
+          <a href="#inicio" class="hover:text-solaris-blue transition-colors hover:scale-105 inline-block">Inicio</a>
+          <a href="#simulador" class="hover:text-solaris-blue transition-colors hover:scale-105 inline-block text-solaris-blue flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#48D448] animate-ping"></span>
+            Cómo Funciona
+          </a>
+          <a href="#sistemas" class="hover:text-solaris-blue transition-colors hover:scale-105 inline-block">Sistemas Solares</a>
+          <a href="#campo-bombeo" class="hover:text-solaris-blue transition-colors hover:scale-105 inline-block">Bombeo Rural</a>
+          <a href="#galeria" class="hover:text-solaris-blue transition-colors hover:scale-105 inline-block text-[#3ec03e]">Obras & Stock</a>
+          <a href="#catalogo" class="hover:text-solaris-blue transition-colors hover:scale-105 inline-block">Catálogo</a>
+          <a href="#faq" class="hover:text-solaris-blue transition-colors hover:scale-105 inline-block">Preguntas</a>
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <button id="cart-open-btn" class="hover-lift-sm relative inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-solaris-blue border border-slate-300 shadow-xs font-bold text-xs sm:text-sm uppercase tracking-wider transition cursor-pointer" title="Quiero un presupuesto">
+          <svg class="w-4 h-4 text-solaris-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          <span class="hidden sm:inline">Quiero un presupuesto</span>
+          <span id="cart-counter" class="w-4 h-4 rounded-full bg-[#48D448] text-white flex items-center justify-center text-[10px] font-bold shadow-xs">0</span>
+        </button>
+
+        <a href="https://wa.me/5492227563370?text=Hola%20Proyecto%20Solaris,%20quisiera%20asesoramiento%20sobre%20un%20equipo%20solar." target="_blank" class="hover-lift-sm inline-flex items-center justify-center w-10 h-10 sm:w-[42px] sm:h-[42px] rounded-xl bg-[#48D448] hover:bg-[#3ec03e] text-white shadow-xs transition cursor-pointer shrink-0" title="Contactar por WhatsApp">
+          <svg class="w-6 h-6 sm:w-7 sm:h-7 animate-hop-3s" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.941-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.353.101.173.45 0.742.964 1.201.662.591 1.221.774 1.394.86.173.086.275.072.376-.043.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
+        </a>
+
+        <button id="mobile-menu-btn" class="lg:hidden p-2 sm:p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-solaris-blue border border-slate-200 transition cursor-pointer" aria-label="Abrir menú de navegación">
+          <svg id="menu-icon-bars" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg id="menu-icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="lg:hidden hidden border-t border-slate-200 bg-white/98 px-4 py-5 shadow-lg backdrop-blur-md transition-all">
+      <nav class="flex flex-col gap-3 text-base font-bold uppercase text-slate-700">
+        <a href="#inicio" class="mobile-nav-link p-2.5 rounded-xl hover:bg-slate-100 hover:text-solaris-blue transition">Inicio</a>
+        <a href="#simulador" class="mobile-nav-link p-2.5 rounded-xl hover:bg-slate-100 text-solaris-blue flex items-center gap-2 transition">
+          <span class="w-2 h-2 rounded-full bg-[#48D448] animate-ping"></span>
+          Cómo Funciona (Simulador)
+        </a>
+        <a href="#sistemas" class="mobile-nav-link p-2.5 rounded-xl hover:bg-slate-100 hover:text-solaris-blue transition">Sistemas Solares (Back-Up / On / Off)</a>
+        <a href="#campo-bombeo" class="mobile-nav-link p-2.5 rounded-xl hover:bg-slate-100 hover:text-solaris-blue transition">Bombeo Rural vs Molinos</a>
+        <a href="#galeria" class="mobile-nav-link p-2.5 rounded-xl hover:bg-slate-100 text-[#3ec03e] transition">Obras & Stock Real</a>
+        <a href="#catalogo" class="mobile-nav-link p-2.5 rounded-xl hover:bg-slate-100 hover:text-solaris-blue transition">Catálogo de Equipos</a>
+        <a href="#faq" class="mobile-nav-link p-2.5 rounded-xl hover:bg-slate-100 hover:text-solaris-blue transition">Preguntas Frecuentes</a>
+        <div class="pt-2 border-t border-slate-200 flex flex-col gap-2">
+          <a href="https://wa.me/5492227563370?text=Hola%20Proyecto%20Solaris,%20quisiera%20asesoramiento%20técnico." target="_blank" class="w-full py-3 rounded-xl bg-[#48D448] text-white text-center font-bold text-sm tracking-wider uppercase shadow-xs flex items-center justify-center gap-2">
+            <span>WhatsApp Directo (+54 9 2227 56-3370)</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="bg-solaris-grayBg text-slate-600 text-sm py-2 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <svg class="w-4 h-4 text-solaris-blue flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+        <span><strong class="text-solaris-blue uppercase">Nos encontramos en:</strong> Lobos, Bs. As. (Ruta 205 Km 98,5) &bull; Instalación llave en mano para campo y ciudad</span>
+      </div>
+      
+      <div class="flex items-center gap-2 ml-auto">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider shrink-0">Marcas:</span>
+        <div class="overflow-hidden w-44 sm:w-56 md:w-64 relative py-0.5" style="mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);">
+          <div class="animate-marquee-brands flex items-center gap-5 text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <span>Growatt</span>
+            <span class="text-slate-300">•</span>
+            <span>QMAX</span>
+            <span class="text-slate-300">•</span>
+            <span>Multisolar</span>
+            <span class="text-slate-300">•</span>
+            <span>Deye</span>
+            <span class="text-slate-300">•</span>
+            <span>Pylontech</span>
+            <span class="text-slate-300">•</span>
+            <span>GoodWe</span>
+            <span class="text-slate-300">•</span>
+            <span>Growatt</span>
+            <span class="text-slate-300">•</span>
+            <span>QMAX</span>
+            <span class="text-slate-300">•</span>
+            <span>Multisolar</span>
+            <span class="text-slate-300">•</span>
+            <span>Deye</span>
+            <span class="text-slate-300">•</span>
+            <span>Pylontech</span>
+            <span class="text-slate-300">•</span>
+            <span>GoodWe</span>
+            <span class="text-slate-300">•</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="flex-grow">
+    <section id="inicio" class="relative overflow-hidden py-12 lg:py-24 border-b border-slate-200 bg-white">
+      <!-- Marca de agua: Isotipo del Logo de Proyecto Solaris con mayor presencia visual -->
+      <div class="absolute inset-y-0 left-0 w-full lg:w-1/2 z-0 overflow-hidden pointer-events-none flex items-center justify-center lg:justify-start select-none">
+        <div class="relative w-[480px] sm:w-[620px] lg:w-[740px] aspect-square -translate-x-8 sm:-translate-x-12 lg:-translate-x-16 opacity-[0.18] mix-blend-multiply overflow-hidden pointer-events-none">
+          <img 
+            src="LOGO PROYECTO SOLARIS (1).jpeg" 
+            alt="Isotipo Proyecto Solaris Marca de Agua" 
+            class="w-full h-full object-cover"
+            style="object-position: center 22%; transform: scale(1.28); transform-origin: center 28%;"
+            onerror="this.style.display='none'"
+          />
+        </div>
+      </div>
+
+      <div class="absolute inset-y-0 right-0 w-1/2 z-0 overflow-hidden pointer-events-none hidden lg:block">
+        <img 
+          id="hero-parallax-img"
+          src="WhatsApp Image 2026-09-07 at 12.03.59 (4).jpeg" 
+          alt="Reflejo del sol en paneles solares de Proyecto Solaris" 
+          class="w-full h-full object-cover parallax-layer"
+          style="object-position: 8% 40%; transform: scale(1.22); transform-origin: 12% 40%;"
+          onerror="this.src='https://images.unsplash.com/photo-1509391365360-2e959784a276?w=1600&auto=format&fit=crop&q=80'"
+        />
+        <div class="absolute inset-0 bg-gradient-to-r from-white via-white/40 to-transparent"></div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          
+          <div class="lg:col-span-7 text-center lg:text-left">
+            <div class="reveal-item inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-900 border border-[#48D448]/50 mb-4 sm:mb-6 hover-lift-sm shadow-xs cursor-default">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#48D448] animate-pulse"></span>
+              INSTALACIÓN PROFESIONAL LLAVE EN MANO &bull; LOBOS
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-bold uppercase tracking-tight text-slate-900 leading-[1.08] mb-4 sm:mb-6">
+              <span class="split-line-mask">
+                <span class="split-line-child">Energía limpia,</span>
+              </span>
+              <span class="split-line-mask">
+                <span class="split-line-child delay-150"><span class="text-solaris-blue">independencia total</span> y</span>
+              </span>
+              <span class="split-line-mask">
+                <span class="split-line-child delay-300"><span class="text-[#3ec03e] underline decoration-[#48D448] decoration-2">cero cortes de luz</span>.</span>
+              </span>
+            </h1>
+
+            <p class="reveal-item delay-200 text-base sm:text-lg lg:text-xl text-slate-700 max-w-2xl mx-auto lg:mx-0 mb-6 sm:mb-8 leading-relaxed font-normal bg-slate-50 lg:bg-white/80 p-3.5 rounded-xl border border-slate-200/80 shadow-2xs">
+              En <strong>Proyecto Solaris</strong> diseñamos e instalamos soluciones a medida desde Lobos hacia toda la región: 
+              sistemas de <strong>Back-Up instantáneo</strong> para que tu hogar nunca sufra cortes, equipos autónomos para el campo y 
+              <strong>bombeo solar inteligente</strong> que sustituye definitivamente a los viejos molinos de viento.
+            </p>
+
+            <div class="reveal-item delay-300 lg:hidden my-6 w-full rounded-2xl overflow-hidden shadow-md border-2 border-slate-200 relative h-60 sm:h-72 group">
+              <img 
+                src="WhatsApp Image 2026-09-07 at 12.03.59 (4).jpeg" 
+                alt="Reflejo del sol en paneles solares en Lobos" 
+                class="w-full h-full object-cover"
+                style="object-position: 8% 40%; transform: scale(1.22); transform-origin: 12% 40%;"
+                onerror="this.src='https://images.unsplash.com/photo-1509391365360-2e959784a276?w=900&auto=format&fit=crop&q=80'"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none"></div>
+              <div class="absolute top-3 left-3 px-3 py-1 rounded-lg bg-black/70 backdrop-blur-xs text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-[#48D448] animate-pulse"></span>
+                <span>Instalación Real Fotovoltaica &bull; Lobos</span>
+              </div>
+              <div class="absolute bottom-3 left-3 right-3 text-left">
+                <span class="text-xs text-white/90 font-semibold uppercase tracking-wider block drop-shadow-xs">
+                  Sol pleno reflejando sobre módulos monocristalinos
+                </span>
+              </div>
+            </div>
+
+            <div class="reveal-item delay-400 flex flex-col sm:flex-row gap-3.5 sm:gap-4 justify-center lg:justify-start items-center">
+              <a href="#simulador" class="hover-lift w-full sm:w-auto px-7 py-3.5 rounded-xl bg-[#48D448] text-white font-bold text-base uppercase tracking-wider hover:bg-[#3ec03e] shadow-sm transition text-center flex items-center justify-center gap-2">
+                <span>Ver Flujo de Energía en Vivo</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </a>
+              <a href="#galeria" class="hover-lift w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white border-2 border-solaris-blue text-solaris-blue hover:bg-solaris-blue hover:text-white font-bold text-base uppercase tracking-wider transition text-center shadow-xs">
+                Ver Obras e Instalaciones
+              </a>
+            </div>
+
+            <div class="reveal-item delay-500 mt-8 sm:mt-10 pt-6 sm:pt-8 border-t border-slate-200 grid grid-cols-3 gap-3 sm:gap-4 text-center lg:text-left">
+              <div class="hover-lift-sm p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200 shadow-xs">
+                <span class="block text-2xl sm:text-3xl font-bold text-solaris-blue">100%</span>
+                <span class="text-[11px] sm:text-xs text-slate-500 font-semibold uppercase">Garantía e Instalación</span>
+              </div>
+              <div class="hover-lift-sm p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200 shadow-xs">
+                <span class="block text-2xl sm:text-3xl font-bold text-[#3ec03e]">0 ms</span>
+                <span class="text-[11px] sm:text-xs text-slate-500 font-semibold uppercase">Corte en Back-Up</span>
+              </div>
+              <div class="hover-lift-sm p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200 shadow-xs">
+                <span class="block text-2xl sm:text-3xl font-bold text-solaris-blue">AGRO</span>
+                <span class="text-[11px] sm:text-xs text-slate-500 font-semibold uppercase">Bombeo & Térmico</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Componentes de un equipo solar con interactividad hover -->
+          <div class="lg:col-span-5 reveal-item delay-300">
+            <div class="hover-lift bg-white p-6 sm:p-8 rounded-2xl text-slate-800 shadow-md border border-slate-200 relative overflow-hidden">
+              <div class="flex items-center justify-between mb-4">
+                <span class="px-3 py-1 bg-[#48D448]/15 text-[#359d35] font-bold text-xs rounded uppercase tracking-wider">
+                  Componentes Esenciales
+                </span>
+                <span class="text-xs font-bold text-slate-400 uppercase">Proyecto Solaris</span>
+              </div>
+              
+              <h3 class="text-xl sm:text-2xl font-bold uppercase text-solaris-blue mb-2 flex items-center gap-2">
+                <svg class="w-6 h-6 text-[#48D448]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                <span>Componentes de un equipo solar</span>
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 mb-6 leading-relaxed">
+                Pasa el mouse sobre cada componente para ver su función técnica:
+              </p>
+
+              <div class="space-y-3 text-sm">
+                <div class="hover-lift-sm p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3.5 group cursor-pointer transition-all duration-300">
+                  <div class="w-8 h-8 rounded-lg bg-[#48D448]/15 text-solaris-blue flex items-center justify-center font-bold text-sm shrink-0">
+                    1
+                  </div>
+                  <div class="w-full">
+                    <h4 class="font-bold text-solaris-blue text-base uppercase">Paneles Solares</h4>
+                    <p class="text-slate-600 text-xs mt-1 max-h-0 overflow-hidden opacity-0 group-hover:max-h-24 group-hover:opacity-100 transition-all duration-300 ease-in-out">Captan la radiación solar y la convierten en corriente continua limpia (Longi / Luxen).</p>
+                  </div>
+                </div>
+
+                <div class="hover-lift-sm p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3.5 group cursor-pointer transition-all duration-300">
+                  <div class="w-8 h-8 rounded-lg bg-blue-100 text-solaris-blue flex items-center justify-center font-bold text-sm shrink-0">
+                    2
+                  </div>
+                  <div class="w-full">
+                    <h4 class="font-bold text-solaris-blue text-base uppercase">Regulador de Carga</h4>
+                    <p class="text-slate-600 text-xs mt-1 max-h-0 overflow-hidden opacity-0 group-hover:max-h-24 group-hover:opacity-100 transition-all duration-300 ease-in-out">Controla la tensión y la corriente para cargar las baterías con máxima eficiencia y seguridad.</p>
+                  </div>
+                </div>
+
+                <div class="hover-lift-sm p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3.5 group cursor-pointer transition-all duration-300">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm shrink-0">
+                    3
+                  </div>
+                  <div class="w-full">
+                    <h4 class="font-bold text-solaris-blue text-base uppercase">Banco de Baterías</h4>
+                    <p class="text-slate-600 text-xs mt-1 max-h-0 overflow-hidden opacity-0 group-hover:max-h-24 group-hover:opacity-100 transition-all duration-300 ease-in-out">Almacena la energía para usarla de noche o en el instante exacto de un apagón de red.</p>
+                  </div>
+                </div>
+
+                <div class="hover-lift-sm p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3.5 group cursor-pointer transition-all duration-300">
+                  <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-sm shrink-0">
+                    4
+                  </div>
+                  <div class="w-full">
+                    <h4 class="font-bold text-solaris-blue text-base uppercase">Inversor</h4>
+                    <p class="text-slate-600 text-xs mt-1 max-h-0 overflow-hidden opacity-0 group-hover:max-h-24 group-hover:opacity-100 transition-all duration-300 ease-in-out">Transforma la corriente continua en 220V estables para heladeras, bombas, TV y computadoras.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="simulador" class="py-16 md:py-24 relative overflow-hidden border-b border-slate-200 bg-slate-900">
+      <div class="absolute inset-0 z-0 flex w-full h-full pointer-events-none">
+        <!-- Mitad izquierda: Video en loop con encuadre completo y difuminación hacia el centro -->
+        <div class="w-1/2 h-full relative overflow-hidden bg-slate-800">
+          <video 
+            id="sim-parallax-video" 
+            autoplay 
+            muted 
+            loop 
+            playsinline 
+            preload="auto"
+            class="w-full h-full object-cover parallax-layer"
+            style="min-width: 100%; min-height: 100%; object-fit: cover; transform: scale(1.08);"
+          >
+            <source src="video%20def%20panel%20solar.mp4" type="video/mp4">
+            <source src="video def panel solar.mp4" type="video/mp4">
+            <source src="panel%20solar%20video.mp4" type="video/mp4">
+            <source src="panel solar video.mp4" type="video/mp4">
+          </video>
+          <!-- Gradiente que funde suavemente el video hacia el azul corporativo del centro -->
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-black/20 to-solaris-blue"></div>
+        </div>
+        <!-- Mitad derecha: Azul institucional difuminándose a blanco -->
+        <div class="w-1/2 h-full bg-gradient-to-r from-solaris-blue via-solaris-blue/75 to-white"></div>
+      </div>
+
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+        <div class="reveal-item bg-white/95 backdrop-blur-md p-6 sm:p-10 rounded-3xl shadow-lg border border-slate-200">
+          <div class="text-center max-w-2xl mx-auto mb-10">
+            <span class="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-[#48D448]/15 text-solaris-green">
+              Demostración Interactiva en Vivo
+            </span>
+            <h2 class="text-2xl sm:text-4xl font-bold uppercase tracking-tight text-solaris-blue mt-3">
+              <span class="split-line-mask">
+                <span class="split-line-child">¿Cómo viaja la energía en tu instalación?</span>
+              </span>
+            </h2>
+            <p class="text-sm sm:text-base text-slate-600 mt-2">
+              Haz clic en los botones para simular el comportamiento del sistema según las condiciones del día:
+            </p>
+          </div>
+
+          <div class="flex flex-wrap justify-center gap-3 mb-10">
+            <button onclick="setSimMode('sol')" id="btn-mode-sol" class="hover-lift-sm px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider bg-[#48D448] text-white shadow-xs cursor-pointer transition">
+              ☀️ Día Soleado (Generación Plena)
+            </button>
+            <button onclick="setSimMode('corte')" id="btn-mode-corte" class="hover-lift-sm px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-solaris-blue border border-slate-300 cursor-pointer transition">
+              🚨 Corte de Red (Modo Back-Up 0ms)
+            </button>
+            <button onclick="setSimMode('noche')" id="btn-mode-noche" class="hover-lift-sm px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-solaris-blue border border-slate-300 cursor-pointer transition">
+              🌙 Modo Noche (Autonomía Batería)
+            </button>
+          </div>
+
+          <div class="grid sm:grid-cols-4 gap-4 text-center">
+            <div id="node-paneles" class="reveal-item delay-100 p-5 rounded-2xl bg-slate-50 border-2 border-[#48D448] shadow-xs">
+              <div class="text-xs font-bold text-[#48D448] uppercase tracking-wider mb-1">Paso 1</div>
+              <h4 class="font-bold text-solaris-blue text-lg uppercase">Paneles Solares</h4>
+              <p id="desc-paneles" class="text-xs text-slate-600 mt-2">Capturan la luz y generan corriente continua (DC).</p>
+            </div>
+
+            <div id="node-regulador" class="reveal-item delay-200 p-5 rounded-2xl bg-slate-50 border border-slate-300 shadow-xs">
+              <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Paso 2</div>
+              <h4 class="font-bold text-solaris-blue text-lg uppercase">Regulador MPPT</h4>
+              <p id="desc-regulador" class="desc-text text-xs text-slate-600 mt-2">Optimiza la conversión con hasta 99% de rendimiento.</p>
+            </div>
+
+            <div id="node-bateria" class="reveal-item delay-300 p-5 rounded-2xl bg-slate-50 border border-slate-300 shadow-xs">
+              <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Paso 3</div>
+              <h4 class="font-bold text-solaris-blue text-lg uppercase">Banco de Baterías</h4>
+              <p id="desc-bateria" class="text-xs text-slate-600 mt-2">Almacena el excedente para cuando más lo necesitas.</p>
+            </div>
+
+            <div id="node-hogar" class="reveal-item delay-400 p-5 rounded-2xl bg-slate-50 border border-slate-300 shadow-xs">
+              <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Paso 4</div>
+              <h4 class="font-bold text-solaris-blue text-lg uppercase">Hogar & Consumos</h4>
+              <p id="desc-hogar" class="text-xs text-slate-600 mt-2">Inversor entrega 220V estables sin parpadeos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sistemas" class="py-16 md:py-24 relative overflow-hidden border-b border-slate-200">
+      <div class="absolute inset-y-0 right-0 w-1/2 z-0 overflow-hidden pointer-events-none hidden lg:block">
+        <img 
+          id="systems-parallax-img"
+          src="Gemini_Generated_Image_mkfr04mkfr04mkfr.jfif" 
+          alt="Instalación de gabinetes solares y baterías" 
+          class="w-full h-full object-cover opacity-80 parallax-layer"
+          style="object-position: center; transform: scale(1.05);"
+          onerror="this.src='https://images.unsplash.com/photo-1558449028-b53a39d100fc?w=1200&auto=format&fit=crop&q=80'"
+        />
+        <div class="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="reveal-item px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-solaris-blue/10 text-solaris-blue">
+            Asesoramiento Técnico Profesional
+          </span>
+          <h2 class="text-3xl sm:text-5xl font-bold uppercase tracking-tight text-solaris-blue mt-3">
+            <span class="split-line-mask">
+              <span class="split-line-child">¿Qué sistema necesita</span>
+            </span>
+            <span class="split-line-mask">
+              <span class="split-line-child delay-150">tu casa, quinta o campo?</span>
+            </span>
+          </h2>
+          <p class="reveal-item delay-200 text-base sm:text-lg text-slate-600 mt-3">
+            Comparamos las tecnologías disponibles para que elijas la solución exacta a tus requerimientos energéticos.
+          </p>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+          <div class="reveal-item delay-100 hover-lift bg-white/95 backdrop-blur-xs p-8 rounded-3xl border border-slate-200 shadow-md flex flex-col justify-between">
+            <div>
+              <span class="px-3 py-1 bg-[#48D448]/20 text-solaris-green font-bold text-xs rounded uppercase tracking-wider">
+                Anti-Apagones
+              </span>
+              <h3 class="text-2xl font-bold uppercase text-solaris-blue mt-4 mb-2">Sistemas Back-Up</h3>
+              <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                Ideales para zonas urbanas o rurales con cortes frecuentes. Ante un corte de red, el inversor conmuta en milisegundos (0 ms) manteniendo heladeras, luces, portones y internet encendidos sin que lo notes.
+              </p>
+              <ul class="space-y-2.5 text-xs font-semibold text-slate-700 uppercase">
+                <li class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#48D448]"></span>
+                  Conmutación automática instantánea
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#48D448]"></span>
+                  Compatible con red eléctrica comercial
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#48D448]"></span>
+                  Baterías de Litio Pylontech / Eastman
+                </li>
+              </ul>
+            </div>
+            <div class="mt-8 pt-6 border-t border-slate-100">
+              <a href="https://wa.me/5492227563370?text=Hola%20Proyecto%20Solaris,%20me%20interesa%20cotizar%20un%20sistema%20Back-Up." target="_blank" class="w-full py-3 rounded-xl bg-solaris-blue hover:bg-solaris-blueHover text-white text-center font-bold text-xs uppercase tracking-wider transition block shadow-xs">
+                Cotizar Sistema Back-Up
+              </a>
+            </div>
+          </div>
+
+          <div class="reveal-item delay-200 hover-lift bg-white/95 backdrop-blur-xs p-8 rounded-3xl border border-slate-200 shadow-md flex flex-col justify-between">
+            <div>
+              <span class="px-3 py-1 bg-blue-100 text-solaris-blue font-bold text-xs rounded uppercase tracking-wider">
+                Ahorro en Factura
+              </span>
+              <h3 class="text-2xl font-bold uppercase text-solaris-blue mt-4 mb-2">Sistemas On-Grid</h3>
+              <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                Conectados en paralelo a la red de la distribuidora. Durante el día los paneles alimentan tus consumos y reducen drásticamente tu factura de luz (Inversores GoodWe / Growatt de inyección a red).
+              </p>
+              <ul class="space-y-2.5 text-xs font-semibold text-slate-700 uppercase">
+                <li class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-solaris-blue"></span>
+                  Baja abrupta del consumo eléctrico
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-solaris-blue"></span>
+                  Inversores monofásicos y trifásicos
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-solaris-blue"></span>
+                  Excelente relación costo-inversión
+                </li>
+              </ul>
+            </div>
+            <div class="mt-8 pt-6 border-t border-slate-100">
+              <a href="https://wa.me/5492227563370?text=Hola%20Proyecto%20Solaris,%20quiero%20información%20sobre%20sistemas%20On-Grid." target="_blank" class="w-full py-3 rounded-xl bg-solaris-blue hover:bg-solaris-blueHover text-white text-center font-bold text-xs uppercase tracking-wider transition block shadow-xs">
+                Cotizar Sistema On-Grid
+              </a>
+            </div>
+          </div>
+
+          <div class="reveal-item delay-300 hover-lift bg-white/95 backdrop-blur-xs p-8 rounded-3xl border border-slate-200 shadow-md flex flex-col justify-between">
+            <div>
+              <span class="px-3 py-1 bg-emerald-100 text-emerald-800 font-bold text-xs rounded uppercase tracking-wider">
+                Autonomía 100%
+              </span>
+              <h3 class="text-2xl font-bold uppercase text-solaris-blue mt-4 mb-2">Sistemas Off-Grid</h3>
+              <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                Diseñados específicamente para campos, estancias y viviendas alejadas donde la red eléctrica no llega o es inexistente. Autonomía absoluta con paneles, inversores híbridos y banco de acumulación robusto.
+              </p>
+              <ul class="space-y-2.5 text-xs font-semibold text-slate-700 uppercase">
+                <li class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                  Independencia total de la red pública
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                  Diseño a medida según tus consumos
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                  Ideal para zonas rurales y campos
+                </li>
+              </ul>
+            </div>
+            <div class="mt-8 pt-6 border-t border-slate-100">
+              <a href="https://wa.me/5492227563370?text=Hola%20Proyecto%20Solaris,%20necesito%20un%20sistema%20Off-Grid%20para%20el%20campo." target="_blank" class="w-full py-3 rounded-xl bg-solaris-blue hover:bg-solaris-blueHover text-white text-center font-bold text-xs uppercase tracking-wider transition block shadow-xs">
+                Cotizar Sistema Off-Grid
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="campo-bombeo" class="py-16 md:py-24 bg-solaris-grayBg border-b border-slate-200 relative overflow-hidden">
+      <!-- Fondo con imagen de bombeo en campo (fondiododo.png) difuminada de un solo lado -->
+      <div class="absolute inset-y-0 right-0 w-1/2 z-0 overflow-hidden pointer-events-none hidden lg:block">
+        <img 
+          id="bombeo-parallax-img"
+          src="fondiododo.png" 
+          alt="Bombeo solar en campo con paneles y tanque australiano" 
+          class="w-full h-full object-cover opacity-75 parallax-layer"
+          style="object-position: center right; transform: scale(1.08);"
+          onerror="this.src='Gemini_Generated_Image_3mzor63mzor63mzo.jfif'"
+        />
+        <div class="absolute inset-0 bg-gradient-to-r from-solaris-grayBg via-solaris-grayBg/80 to-transparent"></div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        <div class="grid lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-6">
+            <span class="reveal-item px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-100 text-amber-800">
+              Soluciones para el Agro & Ganadería
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-bold uppercase tracking-tight text-solaris-blue mt-3 mb-4">
+              <span class="split-line-mask">
+                <span class="split-line-child">Bombeo Solar: adiós a los</span>
+              </span>
+              <span class="split-line-mask">
+                <span class="split-line-child delay-150">viejos molinos ineficientes</span>
+              </span>
+            </h2>
+            <p class="reveal-item delay-200 text-slate-700 text-sm sm:text-base leading-relaxed mb-6">
+              Los molinos de viento tradicionales dependen enteramente de ráfagas fortuitas y requieren constante mantenimiento mecánico de varillas, cueros y torres. El <strong>Bombeo Solar Hiko Pump e INVT</strong> aprovecha la radiación solar para bombear caudal constante hacia tanques australianos y bebederos.
+            </p>
+
+            <!-- Imagen destacada de Bombeo Solar en campo -->
+            <div class="reveal-item delay-250 my-6 rounded-2xl overflow-hidden border border-slate-200 shadow-md relative group h-64 sm:h-72">
+              <img 
+                src="Gemini_Generated_Image_3mzor63mzor63mzo.jfif" 
+                alt="Instalación de bombeo solar en campo ganadero con paneles solares y tanque australiano" 
+                class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                onerror="this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900&auto=format&fit=crop&q=80'"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent flex items-end p-4">
+                <span class="text-white font-bold text-xs uppercase tracking-wider">
+                  Bombeo solar directo a tanque &bull; Caudal constante para aguada de ganado sin depender del viento
+                </span>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="reveal-item delay-100 hover-lift-sm p-4 rounded-2xl bg-white border border-slate-200 flex items-start gap-4">
+                <div class="w-10 h-10 rounded-xl bg-[#48D448]/15 text-solaris-blue flex items-center justify-center font-bold shrink-0">
+                  01
+                </div>
+                <div>
+                  <h4 class="font-bold text-solaris-blue text-base uppercase">Caudal Constante sin Viento</h4>
+                  <p class="text-slate-600 text-xs mt-1">Bombea agua incluso en días calmos con sol pleno, asegurando aguada permanente para el ganado.</p>
+                </div>
+              </div>
+
+              <div class="reveal-item delay-200 hover-lift-sm p-4 rounded-2xl bg-white border border-slate-200 flex items-start gap-4">
+                <div class="w-10 h-10 rounded-xl bg-blue-100 text-solaris-blue flex items-center justify-center font-bold shrink-0">
+                  02
+                </div>
+                <div>
+                  <h4 class="font-bold text-solaris-blue text-base uppercase">Automatización por Sensor de Tanque</h4>
+                  <p class="text-slate-600 text-xs mt-1">El sistema enciende y apaga automáticamente al llenarse el reservorio sin intervención operaria.</p>
+                </div>
+              </div>
+
+              <div class="reveal-item delay-300 hover-lift-sm p-4 rounded-2xl bg-white border border-slate-200 flex items-start gap-4">
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold shrink-0">
+                  03
+                </div>
+                <div>
+                  <h4 class="font-bold text-solaris-blue text-base uppercase">Cero Mantenimiento Mecánico</h4>
+                  <p class="text-slate-600 text-xs mt-1">Bombas sumergibles de acero inoxidable con inversores específicos de bombeo AC/DC de alta durabilidad.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="reveal-item delay-300 mt-8">
+              <a href="https://wa.me/5492227563370?text=Hola%20Proyecto%20Solaris,%20quisiera%20asesoramiento%20sobre%20bombas%20solares%20para%20el%20campo." target="_blank" class="hover-lift inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#48D448] text-white font-bold text-sm uppercase tracking-wider hover:bg-[#3ec03e] shadow-xs transition">
+                <span>Cotizar Bombeo Solar para Campo</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="lg:col-span-6 reveal-item delay-200">
+            <div class="hover-lift bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-md">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Termotanques Solares</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase bg-orange-100 text-orange-800">Línea Hissuma Solar</span>
+              </div>
+              <h3 class="text-2xl font-bold uppercase text-solaris-blue mb-4">Agua caliente sanitaria gratuita todo el año</h3>
+              <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                Nuestros termotanques solares de tubos de vacío <strong>Hissuma Solar</strong> (presurizados y atmosféricos) aprovechan la radiación térmica del sol para calmar hasta un 80% del consumo de gas o electricidad de tu hogar, campo o industria.
+              </p>
+              
+              <div class="rounded-2xl overflow-hidden border border-slate-200 mb-6 h-64 sm:h-72 relative group bg-white flex items-center justify-center p-3">
+                <img 
+                  src="termotanque-tank-in-tank-04f53178cfb3ac59a017655720093729-1024-1024.webp" 
+                  alt="Termotanque Solar Hissuma Solar con tubos de vacío" 
+                  class="w-full h-full object-contain group-hover:scale-105 transition duration-500"
+                  onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/DomesticSolarHeater_SouthAfrica.jpg/960px-DomesticSolarHeater_SouthAfrica.jpg'"
+                />
+                <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/85 via-slate-900/40 to-transparent flex items-end p-4 rounded-b-2xl">
+                  <span class="text-white font-bold text-xs uppercase tracking-wider">
+                    Termotanque solar Hissuma Solar &bull; Tubos de vacío tricapa y alta retención térmica
+                  </span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4 text-center mb-6">
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                  <span class="block font-bold text-solaris-blue text-lg">80% Ahorro</span>
+                  <span class="text-[11px] text-slate-500 uppercase">En Gas / Electricidad</span>
+                </div>
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                  <span class="block font-bold text-[#3ec03e] text-lg">Hissuma Solar</span>
+                  <span class="text-[11px] text-slate-500 uppercase">Acero Inox & Tubos Vacío</span>
+                </div>
+              </div>
+
+              <a href="https://wa.me/5492227563370?text=Hola%20Proyecto%20Solaris,%20quisiera%20cotizar%20un%20termotanque%20solar%20Hissuma." target="_blank" class="hover-lift w-full py-3.5 rounded-xl bg-solaris-blue hover:bg-solaris-blueHover text-white text-center font-bold text-xs uppercase tracking-wider transition block shadow-xs">
+                Cotizar Termotanque Solar Hissuma
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="galeria" class="py-16 md:py-24 bg-white border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span class="reveal-item px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-solaris-blue/10 text-solaris-blue">
+            Galería Fotográfica Real
+          </span>
+          <h2 class="text-3xl sm:text-5xl font-bold uppercase tracking-tight text-solaris-blue mt-3">
+            <span class="split-line-mask">
+              <span class="split-line-child">Obras Realizadas & Stock</span>
+            </span>
+            <span class="split-line-mask">
+              <span class="split-line-child delay-150">Disponible en Lobos</span>
+            </span>
+          </h2>
+          <p class="reveal-item delay-200 text-base sm:text-lg text-slate-600 mt-3">
+            Prolijidad en cableados, gabinetes estancos, estructuras reforzadas y stock permanente de inversores y baterías.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="reveal-item delay-100 hover-lift rounded-3xl overflow-hidden border border-slate-200 shadow-sm bg-slate-50 relative h-72 group">
+            <img 
+              src="WhatsApp Image 2026-09-07 at 12.03.55 (1).jpeg" 
+              alt="Banco de baterías e inversor en gabinete" 
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+              onerror="this.src='https://images.unsplash.com/photo-1592838408599-247074706597?w=800&auto=format&fit=crop&q=80'"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-5">
+              <span class="text-[#48D448] font-bold text-xs uppercase tracking-wider">Tablero & Gabinete</span>
+              <h4 class="text-white font-bold text-base uppercase">Instalación Back-Up Prolija</h4>
+            </div>
+          </div>
+
+          <div class="reveal-item delay-200 hover-lift rounded-3xl overflow-hidden border border-slate-200 shadow-sm bg-slate-50 relative h-72 group">
+            <img 
+              src="WhatsApp Image 2026-09-07 at 12.03.56.jpeg" 
+              alt="Paneles solares instalados en techo" 
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+              onerror="this.src='https://images.unsplash.com/photo-1509391365360-2e959784a276?w=800&auto=format&fit=crop&q=80'"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-5">
+              <span class="text-[#48D448] font-bold text-xs uppercase tracking-wider">Estructura Coplanar</span>
+              <h4 class="text-white font-bold text-base uppercase">Módulos Monocristalinos</h4>
+            </div>
+          </div>
+
+          <div class="reveal-item delay-300 hover-lift rounded-3xl overflow-hidden border border-slate-200 shadow-sm bg-slate-50 relative h-72 group">
+            <img 
+              src="WhatsApp Image 2026-09-07 at 12.03.58 (1).jpeg" 
+              alt="Stock de equipos solares en depósito" 
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+              onerror="this.src='https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=800&auto=format&fit=crop&q=80'"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-5">
+              <span class="text-[#48D448] font-bold text-xs uppercase tracking-wider">Stock Local</span>
+              <h4 class="text-white font-bold text-base uppercase">Equipos en Depósito Lobos</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="catalogo" class="py-16 md:py-24 bg-solaris-grayBg border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+          <span class="reveal-item px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-solaris-blue/10 text-solaris-blue">
+            Catálogo Oficial de Productos
+          </span>
+          <h2 class="text-3xl sm:text-5xl font-bold uppercase tracking-tight text-solaris-blue mt-3">
+            <span class="split-line-mask">
+              <span class="split-line-child">Equipos y Componentes</span>
+            </span>
+            <span class="split-line-mask">
+              <span class="split-line-child delay-150">Seleccionados</span>
+            </span>
+          </h2>
+          <p class="reveal-item delay-200 text-base sm:text-lg text-slate-600 mt-3">
+            Arma tu pedido y envíalo directamente a nuestro WhatsApp oficial para coordinar entrega e instalación.
+          </p>
+
+          <!-- Filtros de Categoría -->
+          <div class="reveal-item delay-300 flex flex-wrap justify-center gap-2 mt-8">
+            <button onclick="filterCatalog('todos')" class="cat-btn px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider bg-solaris-blue text-white shadow-xs transition cursor-pointer" data-cat="todos">Todos</button>
+            <button onclick="filterCatalog('backup')" class="cat-btn px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition cursor-pointer" data-cat="backup">Back-Up & Híbridos</button>
+            <button onclick="filterCatalog('baterias')" class="cat-btn px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition cursor-pointer" data-cat="baterias">Baterías Litio / Gel</button>
+            <button onclick="filterCatalog('paneles')" class="cat-btn px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition cursor-pointer" data-cat="paneles">Paneles Solares</button>
+            <button onclick="filterCatalog('bombeo')" class="cat-btn px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition cursor-pointer" data-cat="bombeo">Bombeo & Térmico</button>
+          </div>
+        </div>
+
+        <!-- Cuadrícula de Productos -->
+        <div id="catalog-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Producto 1 -->
+          <div class="product-card reveal-item delay-100 hover-lift bg-white rounded-3xl p-6 border border-slate-200 shadow-xs flex flex-col justify-between" data-category="backup">
+            <div>
+              <div class="rounded-2xl overflow-hidden h-48 mb-4 relative bg-slate-100 border border-slate-200">
+                <img src="WhatsApp Image 2026-09-07 at 12.03.58 (2).jpeg" alt="Inversor Híbrido Deye" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1548611716-431534064562?w=600&auto=format&fit=crop&q=80'">
+                <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-solaris-blue text-white text-[10px] font-bold uppercase tracking-wider">Deye / Growatt</span>
+              </div>
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">SUN-6K-SG03LP1</span>
+              <h3 class="text-xl font-bold uppercase text-solaris-blue mt-1 mb-2">Inversor Híbrido Monofásico 6kW IP65</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">Inversor monofásico con salida de emergencia anti-cortes de luz, compatible con baterías de litio de baja tensión (LV).</p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-lg font-bold text-solaris-blue">U$S 912</span>
+              <button onclick="addToCart('Inversor Híbrido Monofásico 6kW Deye', 912, 'SUN-6K-SG03LP1')" class="hover-lift-sm px-4 py-2.5 rounded-xl bg-[#48D448] hover:bg-[#3ec03e] text-white font-bold text-xs uppercase tracking-wider transition shadow-xs cursor-pointer">
+                Agregar al Presupuesto
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 2 -->
+          <div class="product-card reveal-item delay-200 hover-lift bg-white rounded-3xl p-6 border border-slate-200 shadow-xs flex flex-col justify-between" data-category="baterias">
+            <div>
+              <div class="rounded-2xl overflow-hidden h-48 mb-4 relative bg-slate-100 border border-slate-200">
+                <img src="WhatsApp Image 2026-09-07 at 12.03.55.jpeg" alt="Batería Pylontech Litio" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1617788138017-80ad40651399?w=600&auto=format&fit=crop&q=80'">
+                <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-[#48D448] text-white text-[10px] font-bold uppercase tracking-wider">Pylontech Litio</span>
+              </div>
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">US5000</span>
+              <h3 class="text-xl font-bold uppercase text-solaris-blue mt-1 mb-2">Batería de Litio Pylontech US5000 4.8kWh</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">Tecnología LiFePO4 de 48V con más de 8.000 ciclos de vida útil y comunicación directa con inversores principales.</p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-lg font-bold text-solaris-blue">U$S 1.063</span>
+              <button onclick="addToCart('Batería Pylontech US5000 Litio 4.8kWh', 1063, 'US5000')" class="hover-lift-sm px-4 py-2.5 rounded-xl bg-[#48D448] hover:bg-[#3ec03e] text-white font-bold text-xs uppercase tracking-wider transition shadow-xs cursor-pointer">
+                Agregar al Presupuesto
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 3 -->
+          <div class="product-card reveal-item delay-300 hover-lift bg-white rounded-3xl p-6 border border-slate-200 shadow-xs flex flex-col justify-between" data-category="paneles">
+            <div>
+              <div class="rounded-2xl overflow-hidden h-48 mb-4 relative bg-slate-100 border border-slate-200">
+                <img src="WhatsApp Image 2026-09-07 at 12.03.56.jpeg" alt="Panel Solar Longi" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=600&auto=format&fit=crop&q=80'">
+                <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-solaris-blue text-white text-[10px] font-bold uppercase tracking-wider">Longi Solar</span>
+              </div>
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">LR8-66HGD-610M</span>
+              <h3 class="text-xl font-bold uppercase text-solaris-blue mt-1 mb-2">Panel Solar Longi Hi-MO 7 610Wp</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">Panel monocristalino bifacial de alta eficiencia con tecnología HPDC y 30 años de garantía de rendimiento.</p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-lg font-bold text-solaris-blue">U$S 102,60</span>
+              <button onclick="addToCart('Panel Solar Longi 610Wp Hi-MO 7', 102.60, 'LR8-66HGD-610M')" class="hover-lift-sm px-4 py-2.5 rounded-xl bg-[#48D448] hover:bg-[#3ec03e] text-white font-bold text-xs uppercase tracking-wider transition shadow-xs cursor-pointer">
+                Agregar al Presupuesto
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 4 -->
+          <div class="product-card reveal-item delay-100 hover-lift bg-white rounded-3xl p-6 border border-slate-200 shadow-xs flex flex-col justify-between" data-category="bombeo">
+            <div>
+              <div class="rounded-2xl overflow-hidden h-48 mb-4 relative bg-slate-100 border border-slate-200">
+                <img src="WhatsApp Image 2026-09-07 at 12.03.58 (1).jpeg" alt="Bomba Solar Hiko Pump" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1574689264859-994914194432?w=600&auto=format&fit=crop&q=80'">
+                <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-amber-600 text-white text-[10px] font-bold uppercase tracking-wider">Hiko Pump</span>
+              </div>
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">HD-4SSC6.5-101</span>
+              <h3 class="text-xl font-bold uppercase text-solaris-blue mt-1 mb-2">Bomba Solar Sumergible 1100W Pozo 4"</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">Bomba de caudal continuo en acero inoxidable con controlador DC inteligente para aguada rural y ganadería.</p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-lg font-bold text-solaris-blue">U$S 249</span>
+              <button onclick="addToCart('Bomba Solar Sumergible 1100W Pozo 4"', 249, 'HD-4SSC6.5-101')" class="hover-lift-sm px-4 py-2.5 rounded-xl bg-[#48D448] hover:bg-[#3ec03e] text-white font-bold text-xs uppercase tracking-wider transition shadow-xs cursor-pointer">
+                Agregar al Presupuesto
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 5 -->
+          <div class="product-card reveal-item delay-200 hover-lift bg-white rounded-3xl p-6 border border-slate-200 shadow-xs flex flex-col justify-between" data-category="baterias">
+            <div>
+              <div class="rounded-2xl overflow-hidden h-48 mb-4 relative bg-slate-100 border border-slate-200">
+                <img src="WhatsApp Image 2026-09-07 at 12.03.55 (1).jpeg" alt="Batería Ultracell Gel" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1558449028-b53a39d100fc?w=600&auto=format&fit=crop&q=80'">
+                <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-solaris-blue text-white text-[10px] font-bold uppercase tracking-wider">Ultracell Gel</span>
+              </div>
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">UCG200-12</span>
+              <h3 class="text-xl font-bold uppercase text-solaris-blue mt-1 mb-2">Batería Ultracell GEL 12V 200Ah</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">Batería de ciclo profundo con tecnología de gel sellada para sistemas solares fotovoltaicos autónomos y solidez probada.</p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-lg font-bold text-solaris-blue">U$S 328</span>
+              <button onclick="addToCart('Batería Ultracell GEL 12V 200Ah', 328, 'UCG200-12')" class="hover-lift-sm px-4 py-2.5 rounded-xl bg-[#48D448] hover:bg-[#3ec03e] text-white font-bold text-xs uppercase tracking-wider transition shadow-xs cursor-pointer">
+                Agregar al Presupuesto
+              </button>
+            </div>
+          </div>
+
+          <!-- Producto 6 -->
+          <div class="product-card reveal-item delay-300 hover-lift bg-white rounded-3xl p-6 border border-slate-200 shadow-xs flex flex-col justify-between" data-category="backup">
+            <div>
+              <div class="rounded-2xl overflow-hidden h-48 mb-4 relative bg-slate-100 border border-slate-200">
+                <img src="WhatsApp Image 2026-09-07 at 12.03.58 (3).jpeg" alt="Inversor GoodWe On-Grid" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&auto=format&fit=crop&q=80'">
+                <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-solaris-blue text-white text-[10px] font-bold uppercase tracking-wider">GoodWe</span>
+              </div>
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">GW6K-DNSG40</span>
+              <h3 class="text-xl font-bold uppercase text-solaris-blue mt-1 mb-2">Inversor On-Grid GoodWe 6kW c/ AFCI</h3>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">Inversor de inyección a red monofásico con protección avanzada contra arcos eléctricos (AFCI) para máxima seguridad.</p>
+            </div>
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-lg font-bold text-solaris-blue">U$S 443</span>
+              <button onclick="addToCart('Inversor On-Grid GoodWe 6kW c/ AFCI', 443, 'GW6K-DNSG40')" class="hover-lift-sm px-4 py-2.5 rounded-xl bg-[#48D448] hover:bg-[#3ec03e] text-white font-bold text-xs uppercase tracking-wider transition shadow-xs cursor-pointer">
+                Agregar al Presupuesto
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="py-16 md:py-24 bg-white border-b border-slate-200">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="reveal-item px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-solaris-blue/10 text-solaris-blue">
+            Resolviendo tus Dudas Técnicas
+          </span>
+          <h2 class="text-3xl sm:text-5xl font-bold uppercase tracking-tight text-solaris-blue mt-3">
+            <span class="split-line-mask">
+              <span class="split-line-child">Preguntas Frecuentes</span>
+            </span>
+          </h2>
+          <p class="reveal-item delay-200 text-base text-slate-600 mt-3">
+            Todo lo que necesitas saber antes de dar el paso hacia tu independencia energética.
+          </p>
+        </div>
+
+        <div class="space-y-4">
+          <!-- FAQ 1 -->
+          <div class="reveal-item delay-100 rounded-2xl border border-slate-200 bg-slate-50 overflow-hidden transition-all">
+            <button onclick="toggleFaq(1)" class="w-full p-5 text-left font-bold uppercase text-solaris-blue flex items-center justify-between gap-4 cursor-pointer">
+              <span>1. ¿Qué equipo solar necesita mi casa o campo?</span>
+              <svg id="faq-icon-1" class="w-5 h-5 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="faq-body-1" class="hidden px-5 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-200 pt-4">
+              Depende directamente de tus consumos y de si buscas protegerte de los cortes de luz o lograr autonomía total. Para una casa con consumos estándar que sufre apagones, recomendamos un <strong>sistema Back-Up</strong> con inversor híbrido (Deye o Growatt) y baterías de litio Pylontech. Si estás en el campo sin red eléctrica, necesitas un sistema <strong>Off-Grid</strong> dimensionado según tus electrodomésticos. Contáctanos por WhatsApp y te hacemos el cálculo exacto sin cargo.
+            </div>
+          </div>
+
+          <!-- FAQ 2 -->
+          <div class="reveal-item delay-200 rounded-2xl border border-slate-200 bg-slate-50 overflow-hidden transition-all">
+            <button onclick="toggleFaq(2)" class="w-full p-5 text-left font-bold uppercase text-solaris-blue flex items-center justify-between gap-4 cursor-pointer">
+              <span>2. ¿Cuál es la diferencia entre baterías de Litio, Gel y Plomo-Ácido?</span>
+              <svg id="faq-icon-2" class="w-5 h-5 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="faq-body-2" class="hidden px-5 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-200 pt-4">
+              <ul class="space-y-2">
+                <li><strong>Litio (Pylontech / Eastman):</strong> La tecnología más avanzada. Ofrecen entre 6.000 y 8.000 ciclos de vida, admiten descargas profundas del 90%, no requieren mantenimiento y son ultra livianas con garantía de hasta 7 a 10 años.</li>
+                <li><strong>Gel (Ultracell):</strong> Excelente opción en ciclo profundo para presupuestos más acotados. Soportan muy bien las descargas moderadas (2.400 ciclos al 30% DOD) y son selladas sin emanación de gases.</li>
+                <li><strong>Plomo-Ácido tradicionales:</strong> Más económicas inicialmente pero con menor vida útil y requieren control periódico de niveles de líquido. Hoy en día son desplazadas por el litio y el gel.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- FAQ 3 -->
+          <div class="reveal-item delay-300 rounded-2xl border border-slate-200 bg-slate-50 overflow-hidden transition-all">
+            <button onclick="toggleFaq(3)" class="w-full p-5 text-left font-bold uppercase text-solaris-blue flex items-center justify-between gap-4 cursor-pointer">
+              <span>3. ¿Dónde nos encontramos y qué zona cubren con las instalaciones?</span>
+              <svg id="faq-icon-3" class="w-5 h-5 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="faq-body-3" class="hidden px-5 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-200 pt-4">
+              Nuestra base operativa está en <strong>Lobos, Provincia de Buenos Aires (Ruta 205 Km 98,5)</strong>. Realizamos instalaciones llave en mano en Lobos y toda la región (Navarro, Roque Pérez, Saladillo, Cañuelas, San Miguel del Monte, General Las Heras y zona rural de la Cuenca del Salado).
+            </div>
+          </div>
+
+          <!-- FAQ 4 -->
+          <div class="reveal-item delay-400 rounded-2xl border border-slate-200 bg-slate-50 overflow-hidden transition-all">
+            <button onclick="toggleFaq(4)" class="w-full p-5 text-left font-bold uppercase text-solaris-blue flex items-center justify-between gap-4 cursor-pointer">
+              <span>4. ¿Qué incluye el servicio de instalación llave en mano?</span>
+              <svg id="faq-icon-4" class="w-5 h-5 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="faq-body-4" class="hidden px-5 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-200 pt-4">
+              Incluye relevamiento técnico en domicilio o campo, montaje de estructuras de aluminio Hopergy, tendido de cables solares certificados Onesto, conexionado de inversores y baterías, protecciones eléctricas AC/DC, puesta en marcha y prueba de funcionamiento.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="py-12 bg-solaris-blue text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="grid md:grid-cols-3 gap-8 items-center pb-8 border-b border-white/10">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-full bg-white p-0.5 flex items-center justify-center shrink-0 overflow-hidden">
+            <img src="277956950_733975734267123_4331651210595680425_n.jpg" alt="Proyecto Solaris" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <span class="text-xl font-bold uppercase tracking-tight block leading-none">PROYECTO <span class="text-[#48D448]">SOLARIS</span></span>
+            <span class="text-xs text-white/70 uppercase tracking-wider block mt-1">Soluciones en energía renovables</span>
+          </div>
+        </div>
+
+        <div class="text-sm text-white/80">
+          <p><strong>Base operativa:</strong> Lobos, Bs. As. (Ruta 205 Km 98,5)</p>
+          <p class="mt-1"><strong>WhatsApp Oficial:</strong> +54 9 2227 56-3370</p>
+        </div>
+
+        <div class="flex md:justify-end gap-3">
+          <a href="https://wa.me/5492227563370?text=Hola%20Proyecto%20Solaris,%20quisiera%20asesoramiento." target="_blank" class="hover-lift-sm px-5 py-2.5 rounded-xl bg-[#48D448] text-white font-bold text-xs uppercase tracking-wider transition shadow-xs">
+            Consultar por WhatsApp
+          </a>
+        </div>
+      </div>
+      <div class="pt-8 text-center text-xs text-white/60">
+        <p>&copy; 2026 Proyecto Solaris &bull; Todos los derechos reservados. Soluciones en energía solar fotovoltaica y bombeo rural.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CARRITO DE COMPRAS / MODAL DESLIZANTE -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs hidden transition-opacity">
+    <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl p-6 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+          <h3 class="font-bold text-solaris-blue text-lg uppercase">Presupuesto de Productos</h3>
+          <button onclick="toggleCart(false)" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div id="cart-items-container" class="py-4 space-y-3 max-h-[50vh] overflow-y-auto custom-scrollbar">
+          <p class="text-slate-400 text-xs italic text-center py-8">Tu presupuesto está vacío. Agrega equipos desde el catálogo.</p>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <span class="font-bold text-slate-700 text-sm uppercase">Total Estimado:</span>
+          <span id="cart-total-price" class="text-xl font-bold text-solaris-blue">U$S 0</span>
+        </div>
+        <button onclick="checkoutWhatsApp()" class="w-full py-3.5 rounded-xl bg-[#48D448] hover:bg-[#3ec03e] text-white font-bold text-sm uppercase tracking-wider transition shadow-sm flex items-center justify-center gap-2 cursor-pointer">
+          <span>Enviar Pedido a WhatsApp</span>
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.941-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.353.101.173.45 0.742.964 1.201.662.591 1.221.774 1.394.86.173.086.275.072.376-.043.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT DE INTERACTIVIDAD -->
+  <script>
+    // Menú Móvil
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const iconBars = document.getElementById('menu-icon-bars');
+    const iconClose = document.getElementById('menu-icon-close');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      iconBars.classList.toggle('hidden');
+      iconClose.classList.toggle('hidden');
+    });
+
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        iconBars.classList.remove('hidden');
+        iconClose.classList.add('hidden');
+      });
+    });
+
+    // Simulador Interactivo
+    function setSimMode(mode) {
+      const btnSol = document.getElementById('btn-mode-sol');
+      const btnCorte = document.getElementById('btn-mode-corte');
+      const btnNoche = document.getElementById('btn-mode-noche');
+      
+      const nodePaneles = document.getElementById('node-paneles');
+      const nodeRegulador = document.getElementById('node-regulador');
+      const nodeBateria = document.getElementById('node-bateria');
+      const nodeHogar = document.getElementById('node-hogar');
+
+      const descPaneles = document.getElementById('desc-paneles');
+      const descRegulador = document.getElementById('desc-regulador');
+      const descBateria = document.getElementById('desc-bateria');
+      const descHogar = document.getElementById('desc-hogar');
+
+      // Reset styles
+      [btnSol, btnCorte, btnNoche].forEach(b => {
+        b.className = "hover-lift-sm px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider bg-slate-100 hover:bg-slate-200 text-solaris-blue border border-slate-300 cursor-pointer transition";
+      });
+
+      if (mode === 'sol') {
+        btnSol.className = "hover-lift-sm px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider bg-[#48D448] text-white shadow-xs cursor-pointer transition";
+        descPaneles.textContent = "Generando potencia máxima en corriente continua (DC).";
+        descRegulador.textContent = "Convierte y regula con eficiencia óptima hacia la vivienda.";
+        descBateria.textContent = "Cargándose con el excedente energético limpio.";
+        descHogar.textContent = "Alimentado por solar directa con red estable.";
+      } else if (mode === 'corte') {
+        btnCorte.className = "hover-lift-sm px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider bg-[#48D448] text-white shadow-xs cursor-pointer transition";
+        descPaneles.textContent = "Generando normalmente desde los módulos solares.";
+        descRegulador.textContent = "Detecta el corte de red y activa el modo Back-Up en 0ms.";
+        descBateria.textContent = "Sosteniendo los consumos críticos del hogar al instante.";
+        descHogar.textContent = "Cero cortes: heladera y luces operando con normalidad.";
+      } else {
+        btnNoche.className = "hover-lift-sm px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider bg-[#48D448] text-white shadow-xs cursor-pointer transition";
+        descPaneles.textContent = "Sin radiación solar nocturna (Descanso).";
+        descRegulador.textContent = "Inversor en modo inversor puro desde acumulación.";
+        descBateria.textContent = "Entregando la energía almacenada durante el día.";
+        descHogar.textContent = "Iluminación, heladera y confort nocturno asegurados.";
+      }
+    }
+
+    // Carrito y Presupuesto
+    let cart = [];
+    const cartDrawer = document.getElementById('cart-drawer');
+    const cartCounter = document.getElementById('cart-counter');
+    const cartItemsContainer = document.getElementById('cart-items-container');
+    const cartTotalPrice = document.getElementById('cart-total-price');
+
+    document.getElementById('cart-open-btn').addEventListener('click', () => toggleCart(true));
+
+    function toggleCart(open) {
+      if (open) {
+        cartDrawer.classList.remove('hidden');
+      } else {
+        cartDrawer.classList.add('hidden');
+      }
+    }
+
+    function addToCart(name, price, code) {
+      const existing = cart.find(i => i.code === code);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ name, price, code, qty: 1 });
+      }
+      updateCartUI();
+      toggleCart(true);
+    }
+
+    function removeFromCart(code) {
+      cart = cart.filter(i => i.code !== code);
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+      cartCounter.textContent = totalItems;
+
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p class="text-slate-400 text-xs italic text-center py-8">Tu presupuesto está vacío. Agrega equipos desde el catálogo.</p>';
+        cartTotalPrice.textContent = 'U$S 0';
+        return;
+      }
+
+      let html = '';
+      let total = 0;
+      cart.forEach(item => {
+        const subtotal = item.price * item.qty;
+        total += subtotal;
+        html += `
+          <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <div>
+              <h5 class="font-bold text-solaris-blue text-xs uppercase">${item.name}</h5>
+              <span class="text-[11px] text-slate-500">Cód: ${item.code} &bull; U$S ${item.price} c/u</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-bold bg-white px-2.5 py-1 rounded-lg border border-slate-200">x${item.qty}</span>
+              <button onclick="removeFromCart('${item.code}')" class="text-red-500 hover:text-red-700 text-xs font-bold cursor-pointer">✕</button>
+            </div>
+          </div>
+        `;
+      });
+
+      cartItemsContainer.innerHTML = html;
+      cartTotalPrice.textContent = `U$S ${total.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    }
+
+    function checkoutWhatsApp() {
+      if (cart.length === 0) return;
+      let text = "Hola Proyecto Solaris, quisiera solicitar un presupuesto formal con los siguientes equipos:\n\n";
+      let total = 0;
+      cart.forEach(item => {
+        const sub = item.price * item.qty;
+        total += sub;
+        text += `- ${item.qty}x ${item.name} (Cód: ${item.code}) - Subtotal: U$S ${sub.toFixed(2)}\n`;
+      });
+      text += `\n*Total Estimado Presupuesto: U$S ${total.toFixed(2)}*\nQuedo a la espera de coordinar detalles e instalación.`;
+      
+      const encoded = encodeURIComponent(text);
+      window.open(`https://wa.me/5492227563370?text=${encoded}`, '_blank');
+    }
+
+    // Filtros de Catálogo
+    function filterCatalog(category) {
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if (btn.getAttribute('data-cat') === category) {
+          btn.className = "cat-btn px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider bg-solaris-blue text-white shadow-xs transition cursor-pointer";
+        } else {
+          btn.className = "cat-btn px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition cursor-pointer";
+        }
+      });
+
+      document.querySelectorAll('.product-card').forEach(card => {
+        const cat = card.getAttribute('data-category');
+        if (category === 'todos' || cat === category) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Acordeón FAQ
+    function toggleFaq(id) {
+      const body = document.getElementById(`faq-body-${id}`);
+      const icon = document.getElementById(`faq-icon-${id}`);
+      body.classList.toggle('hidden');
+      icon.classList.toggle('rotate-180');
+    }
+
+    // === SISTEMA DE ANIMACIÓN AL HACER SCROLL (SEGURO, ROBUSTO Y FLUIDO) ===
+    function triggerReveal(element) {
+      element.classList.add('is-revealed');
+      const children = element.querySelectorAll('.split-line-child');
+      children.forEach(c => {
+        c.style.transform = 'translateY(0)';
+        c.style.opacity = '1';
+      });
+    }
+
+    function initScrollAnimations() {
+      const revealElements = document.querySelectorAll('.reveal-item, .split-line-mask');
+
+      // 1. REVELACIÓN INMEDIATA DE ELEMENTOS VISIBLES EN PANTALLA INICIAL (ABOVE-THE-FOLD)
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      revealElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < vh * 0.92) {
+          triggerReveal(el);
+        }
+      });
+
+      // 2. INTERSECTION OBSERVER CON UMBRAL ÁGIL (threshold: 0.05)
+      if ('IntersectionObserver' in window) {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              triggerReveal(entry.target);
+              observer.unobserve(entry.target);
+            }
+          });
+        }, {
+          root: null,
+          rootMargin: '0px 0px -20px 0px',
+          threshold: 0.05
+        });
+
+        revealElements.forEach(el => {
+          if (!el.classList.contains('is-revealed')) {
+            revealObserver.observe(el);
+          }
+        });
+      }
+
+      // 3. RESPALDO DIRECTO POR EVENTO SCROLL
+      function handleScrollCheck() {
+        const currentVh = window.innerHeight || document.documentElement.clientHeight;
+        revealElements.forEach(el => {
+          if (!el.classList.contains('is-revealed')) {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < currentVh * 0.95) {
+              triggerReveal(el);
+            }
+          }
+        });
+      }
+      window.addEventListener('scroll', handleScrollCheck, { passive: true });
+
+      // 4. TIMEOUT DE SEGURIDAD: Garantiza que nada quede oculto si el visor demora el render
+      setTimeout(() => {
+        revealElements.forEach(el => {
+          if (!el.classList.contains('is-revealed')) {
+            triggerReveal(el);
+          }
+        });
+      }, 1200);
+
+      // === EFECTO PARALLAX SUTIL (GPU-ACCELERATED) ===
+      const heroParallax = document.getElementById('hero-parallax-img');
+      const simParallax = document.getElementById('sim-parallax-video');
+      const systemsParallax = document.getElementById('systems-parallax-img');
+      const bombeoParallax = document.getElementById('bombeo-parallax-img');
+
+      if (simParallax) {
+        simParallax.muted = true;
+        simParallax.defaultMuted = true;
+        const ensureVideoPlaying = () => {
+          const promise = simParallax.play();
+          if (promise !== undefined) {
+            promise.catch(() => {
+              const resume = () => {
+                simParallax.play();
+                window.removeEventListener('click', resume);
+                window.removeEventListener('scroll', resume);
+              };
+              window.addEventListener('click', resume, { once: true });
+              window.addEventListener('scroll', resume, { once: true });
+            });
+          }
+        };
+        ensureVideoPlaying();
+      }
+
+      let ticking = false;
+
+      function updateParallax() {
+        const viewHeight = window.innerHeight;
+
+        // Hero Parallax
+        if (heroParallax) {
+          const heroSec = document.getElementById('inicio');
+          if (heroSec) {
+            const rect = heroSec.getBoundingClientRect();
+            if (rect.top <= viewHeight && rect.bottom >= 0) {
+              const offset = Math.round(rect.top * -0.08);
+              heroParallax.style.transform = `scale(1.22) translate3d(0, ${offset}px, 0)`;
+            }
+          }
+        }
+
+        // Simulador Video Parallax
+        if (simParallax) {
+          const simSec = document.getElementById('simulador');
+          if (simSec) {
+            const rect = simSec.getBoundingClientRect();
+            if (rect.top <= viewHeight && rect.bottom >= 0) {
+              const offset = Math.round((rect.top - viewHeight * 0.25) * -0.05);
+              simParallax.style.transform = `scale(1.08) translate3d(0, ${offset}px, 0)`;
+            }
+          }
+        }
+
+        // Sistemas Parallax
+        if (systemsParallax) {
+          const sysSec = document.getElementById('sistemas');
+          if (sysSec) {
+            const rect = sysSec.getBoundingClientRect();
+            if (rect.top <= viewHeight && rect.bottom >= 0) {
+              const offset = Math.round((rect.top - viewHeight * 0.25) * -0.05);
+              systemsParallax.style.transform = `scale(1.05) translate3d(0, ${offset}px, 0)`;
+            }
+          }
+        }
+
+        // Bombeo Parallax
+        if (bombeoParallax) {
+          const bomSec = document.getElementById('campo-bombeo');
+          if (bomSec) {
+            const rect = bomSec.getBoundingClientRect();
+            if (rect.top <= viewHeight && rect.bottom >= 0) {
+              const offset = Math.round((rect.top - viewHeight * 0.25) * -0.05);
+              bombeoParallax.style.transform = `scale(1.08) translate3d(0, ${offset}px, 0)`;
+            }
+          }
+        }
+
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(updateParallax);
+          ticking = true;
+        }
+      }, { passive: true });
+
+      updateParallax();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initScrollAnimations);
+    } else {
+      initScrollAnimations();
+    }
+  </script>
+</body>
+</html>
