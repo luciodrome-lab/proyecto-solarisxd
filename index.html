@@ -469,9 +469,10 @@
               </div>
             </div>
 
-            <a href="https://wa.me/5492227563370?text=Hola%20Proyecto%20Solaris,%20quisiera%20asesoramiento%20sobre%20bombas%20solares%20para%20el%20campo." target="_blank" class="reveal-item delay-300 btn btn-primary mt-8">
+            <button onclick="openPumpSizer()" class="reveal-item delay-300 btn btn-primary mt-8">
               <span>Cotizar bombeo solar para el campo</span>
-            </a>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>
+            </button>
           </div>
 
           <div class="lg:col-span-6 reveal-item delay-200">
@@ -773,6 +774,56 @@
           <span>Enviar pedido a WhatsApp</span>
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771z"/></svg>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIMENSIONADOR DE BOMBA SOLAR / MODAL DESLIZANTE -->
+  <div id="pump-sizer-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs hidden transition-opacity overflow-y-auto">
+    <div class="min-h-full flex items-start sm:items-center justify-center p-4">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full my-6">
+
+        <div class="flex items-center justify-between p-6 border-b border-solaris-line">
+          <div>
+            <h3 class="font-display font-bold text-solaris-ink text-lg">¿Qué bomba solar necesito?</h3>
+            <p class="text-xs text-solaris-ink/50 mt-0.5">Contanos tu caso y te sugerimos un modelo</p>
+          </div>
+          <button onclick="closePumpSizer()" class="p-2 rounded-xl bg-solaris-paperDim hover:bg-solaris-line/60 text-solaris-ink cursor-pointer shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <div class="p-6">
+          <!-- FORMULARIO -->
+          <div id="pump-sizer-form">
+            <label class="block mb-4">
+              <span class="text-sm font-semibold text-solaris-ink">Profundidad del pozo o nivel de agua (metros)</span>
+              <input type="number" id="pump-input-depth" min="1" step="1" placeholder="Ej: 35" class="mt-1.5 w-full px-4 py-3 rounded-xl border border-solaris-line focus:border-solaris-blue focus:outline-none text-solaris-ink">
+              <span class="text-[11px] text-solaris-ink/45">Distancia desde la superficie hasta el espejo de agua.</span>
+            </label>
+
+            <div class="mb-2">
+              <span class="text-sm font-semibold text-solaris-ink">¿Cómo preferís indicar el consumo de agua?</span>
+            </div>
+            <div class="flex gap-2 mb-4">
+              <button type="button" onclick="setPumpUnit('dia')" id="pump-unit-btn-dia" class="flex-1 px-3 py-2.5 rounded-xl text-sm font-semibold bg-solaris-blue text-white transition cursor-pointer">Litros por día</button>
+              <button type="button" onclick="setPumpUnit('hora')" id="pump-unit-btn-hora" class="flex-1 px-3 py-2.5 rounded-xl text-sm font-semibold bg-solaris-paperDim text-solaris-ink/70 border border-solaris-line transition cursor-pointer">Litros por hora</button>
+            </div>
+
+            <label class="block mb-1">
+              <input type="number" id="pump-input-volume" min="1" step="1" placeholder="Ej: 8000" class="w-full px-4 py-3 rounded-xl border border-solaris-line focus:border-solaris-blue focus:outline-none text-solaris-ink">
+            </label>
+            <p id="pump-unit-hint" class="text-[11px] text-solaris-ink/45 mb-5">Estimamos con un promedio de 6 horas de sol útil por día para el cálculo.</p>
+
+            <button onclick="calculatePumpSizing()" class="btn btn-primary w-full">
+              <span>Ver bomba recomendada</span>
+            </button>
+            <p id="pump-sizer-error" class="hidden text-xs text-red-600 font-medium mt-3 text-center"></p>
+          </div>
+
+          <!-- RESULTADO -->
+          <div id="pump-sizer-result" class="hidden"></div>
+        </div>
       </div>
     </div>
   </div>
