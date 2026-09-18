@@ -272,6 +272,174 @@
 
     renderCatalog();
 
+    // ============ DIMENSIONADOR DE BOMBA SOLAR (línea Hiko Pump, lista Siltron Sep-2026) ============
+    // Los códigos Hiko Pump codifican caudal nominal (m3/h), altura manométrica máxima (m),
+    // tensión (V) y potencia (W) en el propio SKU. Por eso el caudal y la altura de cada
+    // modelo salen directo del nombre de producto de la lista de precios, no son inventados.
+    // OJO: esta es una PRE-selección automática a partir de 2 datos declarados por el cliente.
+    // La selección final la debe confirmar un técnico considerando pérdidas de carga reales
+    // (largo de cañería, codos, filtros) y el descenso dinámico real del pozo.
+    //
+    // "costProvider" = precio de costo de la lista de Siltron (proveedor), sin markup.
+    // Precio de venta = costo x 1.10 x 1.50 (10% + 50% de ganancia, sucesivo = 65% total).
+    // Para cambiar el margen en el futuro, solo hay que tocar MARKUP_PROVEEDOR / MARKUP_GANANCIA.
+    const MARKUP_PROVEEDOR = 1.10;
+    const MARKUP_GANANCIA = 1.50;
+
+    const PUMPS_HIKO = [
+      { code: 'HD-2SS1.2-56-24-120',        pozo: 2, headMax: 56,  flowM3h: 1.2,  watts: 120,  costProvider: 162 },
+      { code: 'HD-2SS1.5-77-24-210',        pozo: 2, headMax: 77,  flowM3h: 1.5,  watts: 210,  costProvider: 164 },
+      { code: 'HD-2SS1.7-100-48-500',       pozo: 2, headMax: 100, flowM3h: 1.7,  watts: 500,  costProvider: 206 },
+      { code: 'HD-3SS1.2-56-24-120',        pozo: 3, headMax: 56,  flowM3h: 1.2,  watts: 120,  costProvider: 187 },
+      { code: 'HD-3SS1.2-77-36-210',        pozo: 3, headMax: 77,  flowM3h: 1.2,  watts: 210,  costProvider: 191 },
+      { code: 'HD-3SSC4-35-24-300',         pozo: 3, headMax: 35,  flowM3h: 4.0,  watts: 300,  costProvider: 195 },
+      { code: 'HD-3SSC4-50-48-400',         pozo: 3, headMax: 50,  flowM3h: 4.0,  watts: 400,  costProvider: 212 },
+      { code: 'HD-4SC7-45-72-600',          pozo: 4, headMax: 45,  flowM3h: 7.0,  watts: 600,  costProvider: 195 },
+      { code: 'HD-3SSC4.5-80-48-600',       pozo: 3, headMax: 80,  flowM3h: 4.5,  watts: 600,  costProvider: 227 },
+      { code: 'HD-4SC7-56-72-750',          pozo: 4, headMax: 56,  flowM3h: 7.0,  watts: 750,  costProvider: 202 },
+      { code: 'HD-4SSC6.5-45-48-500',       pozo: 4, headMax: 45,  flowM3h: 6.5,  watts: 500,  costProvider: 213 },
+      { code: 'HD-3SSC4.5-95-72-750',       pozo: 3, headMax: 95,  flowM3h: 4.5,  watts: 750,  costProvider: 258 },
+      { code: 'HD-4SSC6.5-67-72-750',       pozo: 4, headMax: 67,  flowM3h: 6.5,  watts: 750,  costProvider: 231 },
+      { code: 'HD-4SC7-86-110-1100',        pozo: 4, headMax: 86,  flowM3h: 7.0,  watts: 1100, costProvider: 216 },
+      { code: 'HD-4SSC6.5-101-110-1100',    pozo: 4, headMax: 101, flowM3h: 6.5,  watts: 1100, costProvider: 256 },
+      { code: 'HD-4SSC6-203-110-1500',      pozo: 4, headMax: 203, flowM3h: 6.0,  watts: 1500, costProvider: 317 },
+      { code: 'HD-4SSC9-135-280-2200-AD',   pozo: 4, headMax: 135, flowM3h: 9.0,  watts: 2200, costProvider: 437 },
+      { code: 'HD-4SSC18-137-300-3000-AD',  pozo: 4, headMax: 137, flowM3h: 18.0, watts: 3000, costProvider: 487 },
+      { code: 'HD-4SSC22-115-530-4000-AD',  pozo: 4, headMax: 115, flowM3h: 22.0, watts: 4000, costProvider: 523 }
+    ].map(p => ({ ...p, price: Math.round(p.costProvider * MARKUP_PROVEEDOR * MARKUP_GANANCIA * 100) / 100 }));
+
+    const HORAS_SOL_PROMEDIO = 6;
+    let pumpUnit = 'dia';
+
+    function openPumpSizer() {
+      document.getElementById('pump-sizer-modal').classList.remove('hidden');
+      document.getElementById('pump-sizer-form').classList.remove('hidden');
+      document.getElementById('pump-sizer-result').classList.add('hidden');
+      document.getElementById('pump-sizer-error').classList.add('hidden');
+    }
+
+    function closePumpSizer() {
+      document.getElementById('pump-sizer-modal').classList.add('hidden');
+    }
+
+    function setPumpUnit(unit) {
+      pumpUnit = unit;
+      const activeClass = "flex-1 px-3 py-2.5 rounded-xl text-sm font-semibold bg-solaris-blue text-white transition cursor-pointer";
+      const inactiveClass = "flex-1 px-3 py-2.5 rounded-xl text-sm font-semibold bg-solaris-paperDim text-solaris-ink/70 border border-solaris-line transition cursor-pointer";
+      document.getElementById('pump-unit-btn-dia').className = unit === 'dia' ? activeClass : inactiveClass;
+      document.getElementById('pump-unit-btn-hora').className = unit === 'hora' ? activeClass : inactiveClass;
+      const volInput = document.getElementById('pump-input-volume');
+      const hint = document.getElementById('pump-unit-hint');
+      if (unit === 'dia') {
+        volInput.placeholder = 'Ej: 8000';
+        hint.textContent = `Estimamos con un promedio de ${HORAS_SOL_PROMEDIO} horas de sol útil por día para el cálculo.`;
+      } else {
+        volInput.placeholder = 'Ej: 1300';
+        hint.textContent = 'Caudal que necesitás entregar mientras la bomba está en marcha.';
+      }
+    }
+
+    function pickPump(requiredHeadM, requiredFlowLh) {
+      const candidatos = PUMPS_HIKO.filter(p => p.headMax >= requiredHeadM && (p.flowM3h * 1000) >= requiredFlowLh);
+      if (candidatos.length === 0) return null;
+      candidatos.sort((a, b) => a.price - b.price);
+      return candidatos[0];
+    }
+
+    function calculatePumpSizing() {
+      const errorEl = document.getElementById('pump-sizer-error');
+      errorEl.classList.add('hidden');
+
+      const depth = parseFloat(document.getElementById('pump-input-depth').value);
+      const volume = parseFloat(document.getElementById('pump-input-volume').value);
+
+      if (!depth || depth <= 0 || !volume || volume <= 0) {
+        errorEl.textContent = 'Completá la profundidad y el consumo de agua para calcular.';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      const requiredHeadM = Math.ceil(depth * 1.15 + 5); // margen por pérdida de carga y descenso dinámico
+      const requiredFlowLh = pumpUnit === 'dia' ? Math.ceil(volume / HORAS_SOL_PROMEDIO) : Math.ceil(volume);
+
+      const pump = pickPump(requiredHeadM, requiredFlowLh);
+      renderPumpResult(pump, depth, volume, requiredHeadM, requiredFlowLh);
+    }
+
+    function renderPumpResult(pump, depth, volume, requiredHeadM, requiredFlowLh) {
+      document.getElementById('pump-sizer-form').classList.add('hidden');
+      const resultEl = document.getElementById('pump-sizer-result');
+      resultEl.classList.remove('hidden');
+
+      const consumoTexto = pumpUnit === 'dia' ? `${volume.toLocaleString('es-AR')} L/día` : `${volume.toLocaleString('es-AR')} L/hora`;
+
+      if (!pump) {
+        resultEl.innerHTML = `
+          <div class="text-center py-2">
+            <div class="w-14 h-14 rounded-2xl bg-solaris-amberLight text-solaris-amberHover flex items-center justify-center mx-auto mb-4">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+            </div>
+            <h4 class="font-display font-bold text-solaris-ink text-lg mb-2">Necesitás un sistema a medida</h4>
+            <p class="text-sm text-solaris-ink/60 leading-relaxed mb-6">
+              Con ${depth} m de profundidad y ${consumoTexto} declarados, ninguna bomba solar sumergible monofásica estándar de nuestro catálogo cubre ese requerimiento sin más datos. Puede resolverse con un equipo trifásico industrial (línea INVT) o un diseño con etapas adicionales. Contactanos y lo dimensionamos con un técnico.
+            </p>
+          </div>
+          <button onclick="sendPumpQuoteWhatsApp(null, ${depth}, '${consumoTexto}')" class="btn btn-primary w-full mb-3">
+            <span>Hablar con un técnico por WhatsApp</span>
+          </button>
+          <button onclick="openPumpSizer()" class="btn btn-outline w-full">Volver a calcular</button>
+        `;
+        return;
+      }
+
+      resultEl.innerHTML = `
+        <div class="text-center mb-5">
+          <span class="inline-block px-3 py-1 rounded-full text-[11px] font-semibold bg-solaris-greenSubtle text-solaris-greenDeep mb-3">Recomendación preliminar</span>
+          <h4 class="font-display font-bold text-2xl text-solaris-ink mb-1">${pump.code}</h4>
+          <p class="text-sm text-solaris-ink/55">Bomba solar sumergible Hiko Pump — Pozo ${pump.pozo}"</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-5">
+          <div class="p-3.5 rounded-xl bg-solaris-paperDim text-center">
+            <span class="block font-display font-bold text-solaris-blue text-lg tabular">${pump.headMax} m</span>
+            <span class="text-[11px] text-solaris-ink/50">Altura máx. de la bomba</span>
+          </div>
+          <div class="p-3.5 rounded-xl bg-solaris-paperDim text-center">
+            <span class="block font-display font-bold text-solaris-green text-lg tabular">${pump.flowM3h} m³/h</span>
+            <span class="text-[11px] text-solaris-ink/50">Caudal nominal</span>
+          </div>
+          <div class="p-3.5 rounded-xl bg-solaris-paperDim text-center">
+            <span class="block font-display font-bold text-solaris-ink text-lg tabular">${pump.watts} W</span>
+            <span class="text-[11px] text-solaris-ink/50">Potencia</span>
+          </div>
+          <div class="p-3.5 rounded-xl bg-solaris-paperDim text-center">
+            <span class="block font-display font-bold text-solaris-ink text-lg tabular">U$S ${pump.price.toLocaleString('es-AR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+            <span class="text-[11px] text-solaris-ink/50">Precio de referencia</span>
+          </div>
+        </div>
+
+        <p class="text-[11.5px] text-solaris-ink/50 leading-relaxed mb-5 p-3 rounded-xl bg-solaris-amberLight/60 border border-solaris-amber/20">
+          Cálculo estimado para ${depth} m de profundidad y ${consumoTexto}. La confirmación final del modelo la hace nuestro equipo técnico, considerando el largo real de la cañería y el descenso dinámico del pozo.
+        </p>
+
+        <button onclick="sendPumpQuoteWhatsApp('${pump.code}', ${depth}, '${consumoTexto}')" class="btn btn-primary w-full mb-3">
+          <span>Confirmar cotización por WhatsApp</span>
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771z"/></svg>
+        </button>
+        <button onclick="openPumpSizer()" class="btn btn-outline w-full">Volver a calcular</button>
+      `;
+    }
+
+    function sendPumpQuoteWhatsApp(pumpCode, depth, consumoTexto) {
+      let text = `Hola Proyecto Solaris, quisiera cotizar bombeo solar para el campo.\n\nProfundidad: ${depth} m\nConsumo declarado: ${consumoTexto}`;
+      if (pumpCode) {
+        text += `\n\nLa web me sugirió el modelo ${pumpCode}. Quisiera confirmar esta selección con un técnico.`;
+      } else {
+        text += `\n\nEs un caso que necesita diseño a medida (posible equipo trifásico industrial).`;
+      }
+      window.open(`https://wa.me/5492227563370?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
     // Acordeón FAQ
     function toggleFaq(id) {
       const body = document.getElementById(`faq-body-${id}`);
